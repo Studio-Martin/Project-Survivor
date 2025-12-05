@@ -12,6 +12,3 @@ script = ExtResource("1_ig7tw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
 shape = SubResource("CircleShape2D_0xm2m")
-
-[node name="Timer" type="Timer" parent="CharacterBody2D"]
-autostart = true
