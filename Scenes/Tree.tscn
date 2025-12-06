@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://dlribslwbc5lt"]
+
+[ext_resource type="Texture2D" uid="uid://btjgepfe2lxy3" path="res://Assets/Sprites/SpriteArbre.png" id="1_gtca3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2p81s"]
+atlas = ExtResource("1_gtca3")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rvx1i"]
+atlas = ExtResource("1_gtca3")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_a6yce"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2p81s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rvx1i")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 2.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_itkj8"]
+radius = 1.5
+
+[node name="StaticBody2D" type="StaticBody2D"]
+scale = Vector2(0.3, 0.3)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_a6yce")
+animation = &"Idle"
+autoplay = "Idle"
+frame_progress = 0.14233062
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("CircleShape2D_itkj8")

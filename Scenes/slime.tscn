@@ -1,0 +1,63 @@
+[gd_scene load_steps=9 format=3 uid="uid://b6p0eaggw1w2"]
+
+[ext_resource type="Texture2D" uid="uid://bna8y58ja0qlb" path="res://Assets/Sprites/SpriteSlime.png" id="1_jokqx"]
+[ext_resource type="Script" uid="uid://dsnncwbkaycy7" path="res://Scripts/Components/HealthComponent.gd" id="1_paq7w"]
+[ext_resource type="Script" uid="uid://5b72b28tyrpm" path="res://Scripts/Components/HurtBoxComponent.gd" id="3_f4si1"]
+[ext_resource type="Script" uid="uid://dckks1foa2eh3" path="res://Scripts/Components/HitBoxComponent.gd" id="4_5gljc"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_swwnm"]
+atlas = ExtResource("1_jokqx")
+region = Rect2(0, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aiwxb"]
+atlas = ExtResource("1_jokqx")
+region = Rect2(8, 0, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_paq7w"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_swwnm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aiwxb")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 4.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jokqx"]
+size = Vector2(4.1, 2.1)
+
+[node name="Slime" type="CharacterBody2D"]
+script = ExtResource("1_paq7w")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -3)
+sprite_frames = SubResource("SpriteFrames_paq7w")
+animation = &"Idle"
+autoplay = "Idle"
+frame_progress = 0.24961495
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_jokqx")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("1_paq7w")
+metadata/_custom_type_script = "uid://dsnncwbkaycy7"
+
+[node name="HurtBoxComponent" type="Area2D" parent="." node_paths=PackedStringArray("HealthComponent")]
+script = ExtResource("3_f4si1")
+HealthComponent = NodePath("../HealthComponent")
+metadata/_custom_type_script = "uid://5b72b28tyrpm"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBoxComponent"]
+shape = SubResource("RectangleShape2D_jokqx")
+
+[node name="HitBoxComponent" type="Area2D" parent="."]
+script = ExtResource("4_5gljc")
+metadata/_custom_type_script = "uid://dckks1foa2eh3"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxComponent"]
+shape = SubResource("RectangleShape2D_jokqx")
