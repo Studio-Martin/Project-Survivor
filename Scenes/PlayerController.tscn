@@ -50,7 +50,7 @@ animations = [{
 "speed": 7.0
 }]
 
-[node name="PlayerController" type="CharacterBody2D"]
+[node name="PlayerController" type="CharacterBody2D" groups=["Player"]]
 script = ExtResource("1_3dbmw")
 speed = 1000.0
 
@@ -71,6 +71,7 @@ frame_progress = 0.33596045
 
 [node name="HealthComponent" type="Node" parent="."]
 script = ExtResource("3_rrwoe")
+maxHealth = 10
 metadata/_custom_type_script = "uid://dsnncwbkaycy7"
 
 [node name="HurtBoxComponent" type="Area2D" parent="." node_paths=PackedStringArray("HealthComponent")]

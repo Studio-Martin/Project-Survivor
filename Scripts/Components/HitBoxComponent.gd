@@ -1,4 +1,10 @@
 extends Area2D
 class_name HitBoxComponent
 
-@export var damage : int = 1
+var attack : Attack
+
+@onready var collision_shape = $CollisionShape2D
+
+func _ready():
+	
+	collision_shape.disabled = true

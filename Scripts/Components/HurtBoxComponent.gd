@@ -9,6 +9,6 @@ func _ready():
 	
 func _on_area_entered(area : Area2D):
 	
-	if area is HitBoxComponent and get_parent() != area.get_parent():
+	if area is HitBoxComponent and area.owner != owner and not area.owner.is_in_group("Ennemy"):
 		
-		HealthComponent.take_damage(area.damage)
+		HealthComponent.take_damage(area.attack)

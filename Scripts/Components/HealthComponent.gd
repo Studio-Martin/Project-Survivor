@@ -7,16 +7,16 @@ signal died
 
 @onready var health : int = maxHealth
 
-func take_damage(damage : int) -> void:
+func take_damage(attack : Attack) -> void:
 	
-	print(get_parent().name, " take ", damage, " damage")
+	print(owner.name, " take ", attack.damageAmout, " damage")
 	
-	health -= damage
+	health -= attack.damageAmout
 	
 	if health <= 0:
 		
 		died.emit()
-		get_parent().queue_free()
+		owner.queue_free()
 
 func heal(amount : int) -> void:
 	

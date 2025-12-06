@@ -6,7 +6,7 @@
 [node name="Test world" type="Node2D"]
 
 [node name="PlayerController" parent="." instance=ExtResource("1_au00k")]
-position = Vector2(86, 49)
+position = Vector2(162, 44)
 speed = 2000.0
 
 [node name="Slime" parent="." instance=ExtResource("2_au00k")]

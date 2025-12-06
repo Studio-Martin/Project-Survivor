@@ -1,9 +1,21 @@
-[gd_scene load_steps=9 format=3 uid="uid://b6p0eaggw1w2"]
+[gd_scene load_steps=18 format=3 uid="uid://b6p0eaggw1w2"]
 
+[ext_resource type="Script" uid="uid://b6pdqfbgijaj1" path="res://Scripts/Ennemys/slime.gd" id="1_5gljc"]
 [ext_resource type="Texture2D" uid="uid://bna8y58ja0qlb" path="res://Assets/Sprites/SpriteSlime.png" id="1_jokqx"]
 [ext_resource type="Script" uid="uid://dsnncwbkaycy7" path="res://Scripts/Components/HealthComponent.gd" id="1_paq7w"]
 [ext_resource type="Script" uid="uid://5b72b28tyrpm" path="res://Scripts/Components/HurtBoxComponent.gd" id="3_f4si1"]
 [ext_resource type="Script" uid="uid://dckks1foa2eh3" path="res://Scripts/Components/HitBoxComponent.gd" id="4_5gljc"]
+[ext_resource type="Script" uid="uid://crf1hln2gd4l0" path="res://Scripts/Components/MeleAttackComponent.gd" id="5_f4si1"]
+[ext_resource type="Script" uid="uid://c077ryl0k8pwx" path="res://Scripts/Components/AggroRangeComponent.gd" id="7_vblni"]
+[ext_resource type="Script" uid="uid://rxs3lsvrxiik" path="res://Scripts/Components/AttackRangeComponent.gd" id="8_e388w"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e388w"]
+atlas = ExtResource("1_jokqx")
+region = Rect2(16, 0, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r4o34"]
+atlas = ExtResource("1_jokqx")
+region = Rect2(24, 0, 8, 8)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_swwnm"]
 atlas = ExtResource("1_jokqx")
@@ -15,6 +27,17 @@ region = Rect2(8, 0, 8, 8)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_paq7w"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e388w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r4o34")
+}],
+"loop": true,
+"name": &"Attack",
+"speed": 2.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_swwnm")
@@ -30,24 +53,41 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jokqx"]
 size = Vector2(4.1, 2.1)
 
-[node name="Slime" type="CharacterBody2D"]
-script = ExtResource("1_paq7w")
+[sub_resource type="CircleShape2D" id="CircleShape2D_vblni"]
+radius = 1.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_e388w"]
+radius = 13.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_r4o34"]
+radius = 4.0
+
+[node name="Slime" type="CharacterBody2D" groups=["Ennemy"]]
+script = ExtResource("1_5gljc")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -3)
 sprite_frames = SubResource("SpriteFrames_paq7w")
-animation = &"Idle"
+animation = &"Attack"
 autoplay = "Idle"
-frame_progress = 0.24961495
+frame_progress = 0.674855
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("RectangleShape2D_jokqx")
 
 [node name="HealthComponent" type="Node" parent="."]
 script = ExtResource("1_paq7w")
 metadata/_custom_type_script = "uid://dsnncwbkaycy7"
 
+[node name="MeleAttackComponent" type="Node" parent="." node_paths=PackedStringArray("HitBox")]
+script = ExtResource("5_f4si1")
+HitBox = NodePath("../HitBoxComponent")
+damage = 2
+metadata/_custom_type_script = "uid://crf1hln2gd4l0"
+
 [node name="HurtBoxComponent" type="Area2D" parent="." node_paths=PackedStringArray("HealthComponent")]
+visible = false
 script = ExtResource("3_f4si1")
 HealthComponent = NodePath("../HealthComponent")
 metadata/_custom_type_script = "uid://5b72b28tyrpm"
@@ -60,4 +100,25 @@ script = ExtResource("4_5gljc")
 metadata/_custom_type_script = "uid://dckks1foa2eh3"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxComponent"]
-shape = SubResource("RectangleShape2D_jokqx")
+position = Vector2(-3, -1)
+shape = SubResource("CircleShape2D_vblni")
+
+[node name="AggroRangeComponent" type="Area2D" parent="."]
+visible = false
+script = ExtResource("7_vblni")
+metadata/_custom_type_script = "uid://c077ryl0k8pwx"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AggroRangeComponent"]
+shape = SubResource("CircleShape2D_e388w")
+
+[node name="AttackRangeComponent" type="Area2D" parent="."]
+visible = false
+script = ExtResource("8_e388w")
+metadata/_custom_type_script = "uid://rxs3lsvrxiik"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRangeComponent"]
+shape = SubResource("CircleShape2D_r4o34")
+
+[connection signal="body_entered" from="AggroRangeComponent" to="." method="_on_aggro_range_component_body_entered"]
+[connection signal="body_entered" from="AttackRangeComponent" to="." method="_on_attack_range_component_body_entered"]
+[connection signal="body_exited" from="AttackRangeComponent" to="." method="_on_attack_range_component_body_exited"]
