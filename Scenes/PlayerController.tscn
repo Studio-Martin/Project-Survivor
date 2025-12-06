@@ -74,9 +74,8 @@ script = ExtResource("3_rrwoe")
 maxHealth = 10
 metadata/_custom_type_script = "uid://dsnncwbkaycy7"
 
-[node name="HurtBoxComponent" type="Area2D" parent="." node_paths=PackedStringArray("HealthComponent")]
+[node name="HurtBoxComponent" type="Area2D" parent="."]
 script = ExtResource("4_a8u7r")
-HealthComponent = NodePath("../HealthComponent")
 metadata/_custom_type_script = "uid://5b72b28tyrpm"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBoxComponent"]

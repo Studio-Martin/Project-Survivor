@@ -1,7 +1,7 @@
 extends Area2D
 class_name HurtBoxComponent
 
-@export var HealthComponent : HealthComponent
+@export var Health : HealthComponent
 
 func _ready():
 	
@@ -11,4 +11,4 @@ func _on_area_entered(area : Area2D):
 	
 	if area is HitBoxComponent and area.owner != owner and not area.owner.is_in_group("Ennemy"):
 		
-		HealthComponent.take_damage(area.attack)
+		Health.take_damage(area.attack)

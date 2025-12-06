@@ -3,36 +3,38 @@ extends CharacterBody2D
 @export var speed : float = 10.0
 @export var friction : float = 5.0  # Nouveau paramètre pour le lerp
 
+@export var attack_damage : int = 2
+
 @onready var hit_box_component = $HitBoxComponent
-@onready var mele_attack_component = $MeleAttackComponent
+@onready var animation_player = $AnimationPlayer
 
 var target
 var target_in_range : bool = false
 
 func _physics_process(delta):
 	
-	if target and not target_in_range:  # Ne bouge que si pas en portée d'attaque
-		
-		# Flip selon la direction
-		if target.global_position.x < global_position.x:
-			scale.x = -1
-		else:
-			scale.x = 1
+	if target:
 		
 		# Calcule la direction vers la cible
-		var direction = (target.global_position - global_position).normalized()
+		var direction : Vector2 = (target.global_position - global_position).normalized()
+		
+			# Flip selon la direction
+		if direction.x < 0:
+			scale.y = -1
+			rotation += 180
+		else:
+			scale.y = 1
+			rotation -= 180
+		
+		hit_box_component.look_at(target.global_position)
+		look_at(target.global_position)
+		
 		velocity = direction * speed
 		
-	elif target_in_range:
+	if target_in_range:
+		
 		# Attaque si en portée
-		hit_box_component.look_at(target.global_position)
-		
-		if mele_attack_component.can_attack:
-			
-			mele_attack_component.attack()
-		
-		# Ralentit progressivement
-		velocity = lerp(velocity, Vector2.ZERO, friction * delta)
+		attack()
 		
 	else:
 		# Pas de cible, ralentit
@@ -54,7 +56,16 @@ func _on_attack_range_component_body_exited(body):
 	if body == target:
 		target_in_range = false
 
-func _on_aggro_range_component_body_exited(body):
-	if body == target:
-		target = null
-		target_in_range = false
+func attack() -> void:
+	
+	var current_attack = Attack.new()
+	current_attack.damageAmout = attack_damage
+	
+	hit_box_component.attack = current_attack
+	
+	animation_player.play("Attack")
+	
+	await animation_player.animation_finished
+	
+	hit_box_component.attack = null
+	animation_player.play("RESET")
