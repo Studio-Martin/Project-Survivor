@@ -26,7 +26,6 @@ func _physics_process(delta):
 			scale.y = 1
 			rotation -= 180
 		
-		hit_box_component.look_at(target.global_position)
 		look_at(target.global_position)
 		
 		velocity = direction * speed
@@ -43,10 +42,12 @@ func _physics_process(delta):
 	move_and_slide()
 
 func _on_aggro_range_component_body_entered(body):
+	
 	if body.is_in_group("Player"):
 		target = body as CharacterBody2D
-	elif body.is_in_group("Structure"):
-		target = body as StaticBody2D
+		
+	elif body.is_in_group("Ally"):
+		target = body
 
 func _on_attack_range_component_body_entered(body):
 	if body == target:

@@ -9,6 +9,8 @@ func _ready():
 	
 func _on_area_entered(area : Area2D):
 	
-	if area is HitBoxComponent and area.owner != owner and not area.owner.is_in_group("Ennemy"):
+	if area is HitBoxComponent and area.owner != owner and area.owner.is_in_group("Ally"):
+		
+		print("i'm getting hurt")
 		
 		Health.take_damage(area.attack)

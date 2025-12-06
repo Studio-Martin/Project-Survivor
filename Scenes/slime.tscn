@@ -169,8 +169,9 @@ shape = SubResource("RectangleShape2D_jokqx")
 script = ExtResource("1_paq7w")
 metadata/_custom_type_script = "uid://dsnncwbkaycy7"
 
-[node name="HurtBoxComponent" type="Area2D" parent="."]
+[node name="HurtBoxComponent" type="Area2D" parent="." node_paths=PackedStringArray("Health")]
 script = ExtResource("3_f4si1")
+Health = NodePath("../HealthComponent")
 metadata/_custom_type_script = "uid://5b72b28tyrpm"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBoxComponent"]
@@ -194,7 +195,6 @@ metadata/_custom_type_script = "uid://c077ryl0k8pwx"
 shape = SubResource("CircleShape2D_e388w")
 
 [node name="AttackRangeComponent" type="Area2D" parent="."]
-visible = false
 script = ExtResource("8_e388w")
 metadata/_custom_type_script = "uid://rxs3lsvrxiik"
 
