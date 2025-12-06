@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://82ix36fatjf3"]
+
+[ext_resource type="PackedScene" uid="uid://bribd4td3p7g7" path="res://Scenes/PlayerController.tscn" id="1_au00k"]
+[ext_resource type="PackedScene" uid="uid://dlribslwbc5lt" path="res://Scenes/obstacle.tscn" id="2_707cn"]
+
+[node name="Test world" type="Node2D"]
+
+[node name="PlayerController" parent="." instance=ExtResource("1_au00k")]
+position = Vector2(86, 49)
+speed = 5000.0
+
+[node name="StaticBody2D" parent="." instance=ExtResource("2_707cn")]
+position = Vector2(-35, 102)
+scale = Vector2(0.3, 0.3)
+
+[node name="StaticBody2D2" parent="." instance=ExtResource("2_707cn")]
+position = Vector2(132, 125.00001)
+scale = Vector2(0.3, 0.3)
+
+[node name="StaticBody2D3" parent="." instance=ExtResource("2_707cn")]
+position = Vector2(188, 46)
+scale = Vector2(0.3, 0.3)
+
+[node name="StaticBody2D4" parent="." instance=ExtResource("2_707cn")]
+position = Vector2(44, -54)
+scale = Vector2(0.3, 0.3)
