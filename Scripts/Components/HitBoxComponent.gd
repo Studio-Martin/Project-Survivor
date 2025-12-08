@@ -1,4 +1,0 @@
-extends Area2D
-class_name HitBoxComponent
-
-var attack : Attack

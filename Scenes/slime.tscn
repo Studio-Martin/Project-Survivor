@@ -2,11 +2,6 @@
 
 [ext_resource type="Script" uid="uid://b6pdqfbgijaj1" path="res://Scripts/Ennemys/slime.gd" id="1_5gljc"]
 [ext_resource type="Texture2D" uid="uid://bna8y58ja0qlb" path="res://Assets/Sprites/SpriteSlime.png" id="1_jokqx"]
-[ext_resource type="Script" uid="uid://dsnncwbkaycy7" path="res://Scripts/Components/HealthComponent.gd" id="1_paq7w"]
-[ext_resource type="Script" uid="uid://5b72b28tyrpm" path="res://Scripts/Components/HurtBoxComponent.gd" id="3_f4si1"]
-[ext_resource type="Script" uid="uid://dckks1foa2eh3" path="res://Scripts/Components/HitBoxComponent.gd" id="4_5gljc"]
-[ext_resource type="Script" uid="uid://c077ryl0k8pwx" path="res://Scripts/Components/AggroRangeComponent.gd" id="7_vblni"]
-[ext_resource type="Script" uid="uid://rxs3lsvrxiik" path="res://Scripts/Components/AttackRangeComponent.gd" id="8_e388w"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vblni"]
 atlas = ExtResource("1_jokqx")
@@ -137,11 +132,75 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jokqx"]
 size = Vector2(4.1, 2.1)
 
+[sub_resource type="GDScript" id="GDScript_swwnm"]
+script/source = "extends Node
+class_name HealthComponent
+
+@export var maxHealth : int = 5
+
+signal died
+
+@onready var health : int = maxHealth
+
+func take_damage(attack : Attack) -> void:
+	
+	print(owner.name, \" take \", attack.damageAmout, \" damage\")
+	
+	health -= attack.damageAmout
+	
+	if health <= 0:
+		
+		died.emit()
+		owner.queue_free()
+
+func heal(amount : int) -> void:
+	
+	if health < maxHealth:
+		
+		health += amount
+"
+
+[sub_resource type="GDScript" id="GDScript_aiwxb"]
+script/source = "extends Area2D
+class_name HurtBoxComponent
+
+@export var Health : HealthComponent
+
+func _ready():
+	
+	area_entered.connect(_on_area_entered)
+
+func _on_area_entered(area : Area2D):
+	
+	if area is HitBoxComponent and area.owner != owner and area.owner.is_in_group(\"Ally\"):
+		
+		print(\"i'm getting hurt\")
+		
+		Health.take_damage(area.attack)
+"
+
+[sub_resource type="GDScript" id="GDScript_paq7w"]
+script/source = "extends Area2D
+class_name HitBoxComponent
+
+var attack : Attack
+"
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_vblni"]
 radius = 1.0
 
+[sub_resource type="GDScript" id="GDScript_f4si1"]
+script/source = "extends Area2D
+class_name AggroRangeComponent
+"
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_e388w"]
 radius = 31.0
+
+[sub_resource type="GDScript" id="GDScript_5gljc"]
+script/source = "extends Area2D
+class_name AttackRangeComponent
+"
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_r4o34"]
 radius = 4.0
@@ -166,11 +225,12 @@ visible = false
 shape = SubResource("RectangleShape2D_jokqx")
 
 [node name="HealthComponent" type="Node" parent="."]
-script = ExtResource("1_paq7w")
+script = SubResource("GDScript_swwnm")
 metadata/_custom_type_script = "uid://dsnncwbkaycy7"
 
 [node name="HurtBoxComponent" type="Area2D" parent="." node_paths=PackedStringArray("Health")]
-script = ExtResource("3_f4si1")
+visible = false
+script = SubResource("GDScript_aiwxb")
 Health = NodePath("../HealthComponent")
 metadata/_custom_type_script = "uid://5b72b28tyrpm"
 
@@ -178,7 +238,8 @@ metadata/_custom_type_script = "uid://5b72b28tyrpm"
 shape = SubResource("RectangleShape2D_jokqx")
 
 [node name="HitBoxComponent" type="Area2D" parent="."]
-script = ExtResource("4_5gljc")
+visible = false
+script = SubResource("GDScript_paq7w")
 metadata/_custom_type_script = "uid://dckks1foa2eh3"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBoxComponent"]
@@ -188,14 +249,15 @@ disabled = true
 
 [node name="AggroRangeComponent" type="Area2D" parent="."]
 visible = false
-script = ExtResource("7_vblni")
+script = SubResource("GDScript_f4si1")
 metadata/_custom_type_script = "uid://c077ryl0k8pwx"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AggroRangeComponent"]
 shape = SubResource("CircleShape2D_e388w")
 
 [node name="AttackRangeComponent" type="Area2D" parent="."]
-script = ExtResource("8_e388w")
+visible = false
+script = SubResource("GDScript_5gljc")
 metadata/_custom_type_script = "uid://rxs3lsvrxiik"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackRangeComponent"]

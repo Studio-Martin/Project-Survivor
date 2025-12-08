@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://cespsichce6rb"]
+
+[ext_resource type="Script" uid="uid://308t5i0p7ong" path="res://Scripts/Class/Golem.gd" id="1_jene6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jene6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_v3xnb"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dhrmc"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ddpsh"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hnmsj"]
+
+[node name="Golem" type="CharacterBody2D"]
+script = ExtResource("1_jene6")
+metadata/_custom_type_script = "uid://308t5i0p7ong"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_jene6")
+
+[node name="AggroRange" type="Area2D" parent="."]
+scale = Vector2(30, 30)
+
+[node name="AggroCollisionShape" type="CollisionShape2D" parent="AggroRange"]
+shape = SubResource("CircleShape2D_v3xnb")
+
+[node name="AttackRange" type="Area2D" parent="."]
+
+[node name="AttackCollisionShapee" type="CollisionShape2D" parent="AttackRange"]
+scale = Vector2(5, 5)
+shape = SubResource("CircleShape2D_dhrmc")
+
+[node name="HitBox" type="Area2D" parent="."]
+
+[node name="HitBoxCollisionShape" type="CollisionShape2D" parent="HitBox"]
+shape = SubResource("CircleShape2D_ddpsh")
+
+[node name="HurtBox" type="Area2D" parent="."]
+
+[node name="HurtBoxCollisionShape" type="CollisionShape2D" parent="HurtBox"]
+shape = SubResource("CircleShape2D_hnmsj")
+
+[connection signal="body_entered" from="AggroRange" to="." method="_on_aggro_range_body_entered"]
+[connection signal="body_entered" from="AttackRange" to="." method="_on_attack_range_body_entered"]
+[connection signal="body_exited" from="AttackRange" to="." method="_on_attack_range_body_exited"]
