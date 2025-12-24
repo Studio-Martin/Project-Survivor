@@ -7,16 +7,6 @@
 
 [node name="PlayerController" parent="." instance=ExtResource("1_au00k")]
 position = Vector2(162, 44)
-speed = 2000.0
 
 [node name="Slime" parent="." instance=ExtResource("2_au00k")]
 position = Vector2(59, 62)
-
-[node name="Slime2" parent="." instance=ExtResource("2_au00k")]
-position = Vector2(65, 39)
-
-[node name="Slime3" parent="." instance=ExtResource("2_au00k")]
-position = Vector2(105, 38)
-
-[node name="Slime4" parent="." instance=ExtResource("2_au00k")]
-position = Vector2(112, 62)

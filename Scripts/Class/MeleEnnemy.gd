@@ -1,3 +1,3 @@
 extends BasicEnnemy
 
-class_name MeleEnnemy
+class_name EnnemyEntities

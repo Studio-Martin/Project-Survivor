@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bribd4td3p7g7"]
+[gd_scene load_steps=11 format=3 uid="uid://bribd4td3p7g7"]
 
 [ext_resource type="Script" uid="uid://bi501sxcms1jm" path="res://Scripts/player_controller.gd" id="1_3dbmw"]
 [ext_resource type="Texture2D" uid="uid://dgfvto7phrftk" path="res://Assets/Sprites/SpritePlayer.png" id="2_eplni"]
@@ -48,14 +48,57 @@ animations = [{
 "speed": 7.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_crrsd"]
-radius = 2.0
-height = 6.0
+[sub_resource type="GDScript" id="GDScript_swwnm"]
+script/source = "extends Node
+class_name HealthComponent
+
+@export var maxHealth : int = 5
+
+signal died
+
+@onready var health : int = maxHealth
+
+func take_damage(attack : Attack) -> void:
+	
+	print(owner.name, \" take \", attack.damageAmout, \" damage\")
+	
+	health -= attack.damageAmout
+	
+	if health <= 0:
+		
+		died.emit()
+		owner.queue_free()
+
+func heal(amount : int) -> void:
+	
+	if health < maxHealth:
+		
+		health += amount
+"
+
+[sub_resource type="GDScript" id="GDScript_aiwxb"]
+script/source = "extends Area2D
+class_name HurtBoxComponent
+
+@export var Health : HealthComponent
+
+func _ready():
+	
+	area_entered.connect(_on_area_entered)
+
+func _on_area_entered(area : Area2D):
+	
+	if area is HitBoxComponent and area.owner != owner and area.owner.is_in_group(\"Ally\"):
+		
+		print(\"i'm getting hurt\")
+		
+		Health.take_damage(area.attack)
+"
 
 [node name="PlayerController" type="CharacterBody2D" groups=["Ally", "Player"]]
 script = ExtResource("1_3dbmw")
 
-[node name="HitBox" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 1)
 shape = SubResource("CapsuleShape2D_eplni")
 
@@ -70,6 +113,14 @@ animation = &"Idle"
 autoplay = "Idle"
 frame_progress = 0.33596045
 
-[node name="HurtBox" type="CollisionShape2D" parent="."]
+[node name="HealthComponent" type="Node" parent="."]
+script = SubResource("GDScript_swwnm")
+maxHealth = 10
+
+[node name="HurtBoxComponent" type="Area2D" parent="." node_paths=PackedStringArray("Health")]
+script = SubResource("GDScript_aiwxb")
+Health = NodePath("../HealthComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBoxComponent"]
 position = Vector2(0, 1)
-shape = SubResource("CapsuleShape2D_crrsd")
+shape = SubResource("CapsuleShape2D_eplni")
